@@ -19,6 +19,7 @@ const InventoryManagementApp = () => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({
     key: "quantity",
     direction: "ascending",
@@ -34,6 +35,11 @@ const InventoryManagementApp = () => {
   );
 
   const handleAddItem = (newItem) => {
+    const existingItem = inventory.find((item) => item.name === newItem.name);
+    if(existingItem){
+      alert("Item already exists");
+      return;
+    }
     const itemWithId = { ...newItem, id: Date.now() };
     setInventory([...inventory, itemWithId]);
     setOpenAddDialog(false);
@@ -78,26 +84,45 @@ const InventoryManagementApp = () => {
 
     return sortedItems;
   }, [inventory, sortConfig]);
+  
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+
+  // const filteredInventory = useMemo(
+  //   () =>
+  //     sortedInventory.filter(
+  //       (item) => categoryFilter === "All" || item.category === categoryFilter
+  //     ),
+  //   [sortedInventory, categoryFilter]
+  // );
 
   const filteredInventory = useMemo(
     () =>
       sortedInventory.filter(
-        (item) => categoryFilter === "All" || item.category === categoryFilter
+        (item) =>
+          (categoryFilter === "All" || item.category === categoryFilter) &&
+          item.name.toLowerCase().includes(searchTerm.toLowerCase())
       ),
-    [sortedInventory, categoryFilter]
+    [sortedInventory, categoryFilter, searchTerm]
   );
+
+
   return (
     <div className=" w-screen h-screen  bg-gradient-to-r from-purple-100 to-orange-100">
       <div className="container mx-auto p-6">
       <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 animate-gradient-x mb-8 text-center tracking-widest animate-bounce">
-        Inventory Management
+        Manage Your Inventory
       </h1>
 
       <div className="flex justify-between items-center mb-6">
+        <div className=" w-full flex justify-between items-center gap-5">
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="px-4 py-2 border rounded-lg bg-gray-100 shadow focus:ring-2 focus:ring-purple-400 hover:ring-4 hover:ring-purple-300"
+          className="px-4 justify-end py-4 border rounded-lg bg-gray-100 shadow focus:ring-2 focus:ring-purple-400 hover:ring-4 hover:ring-purple-300 transition-transform transform hover:scale-110 active:scale-95 overflow-hidden"
         >
           {categories.map((category) => (
             <option key={category} value={category}>
@@ -106,17 +131,27 @@ const InventoryManagementApp = () => {
           ))}
         </select>
 
+        <input
+        type="text"
+        placeholder="Search Items"
+        value={searchTerm}
+        onChange={handleSearch}
+        className="w-full px-4 py-5 rounded-lg transition-transform transform hover:scale-109 bg-gray-100 text-gray-800 placeholder-gray-500 shadow-md focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+        required
+      />
+
         <button
           onClick={() => setOpenAddDialog(true)}
-          className="relative px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-110 active:scale-95 overflow-hidden"
+          className="relative px-10 py-3  bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-110"
         >
           <span className="absolute inset-0 bg-gradient-to-r from-pink-400 to-purple-400 opacity-0 hover:opacity-20 transition-opacity"></span>
           <span className="relative">+ Add New Item</span>
         </button>
       </div>
+        </div>
 
       <div className="overflow-x-auto rounded-lg shadow-xl border border-gray-300">
-        <table className="w-full border-collapse transition delay-150 duration-300 ease-in-out hover:-translate-y-1  bg-gray-100 text-sm text-gray-800">
+        <table className="w-full border-collapse  bg-gray-100 text-sm text-gray-800">
           <thead>
             <tr className="bg-gradient-to-r  from-purple-500 via-pink-500 to-orange-500 text-white">
               {["Name", "Category", "Quantity", "Price"].map((key) => (
@@ -135,13 +170,15 @@ const InventoryManagementApp = () => {
           </thead>
           <tbody>
             {filteredInventory.map((item) => (
-              <tr key={item.id} className={"border-b "}>
-                <td className="p-4">{item.name}</td>
+              <tr key={item.id} className={"border-b transition-transform transform hover:scale-102 hover:border-b-red-400 "}>
+                <td className="p-4 ">{item.name}</td>
                 <td className="p-4">{item.category}</td>
                 <td
                   className={`p-4 ${
-                    item.quantity < 10 ? "text-red-600 font-bold" : ""
-                  }`}
+                    parseInt(item.quantity.match(/\d+/)[0]) < 10 
+                      ? "text-red-600 font-bold" 
+                      : ""
+                   }`}
                 >
                   {item.quantity}
                 </td>
@@ -154,13 +191,13 @@ const InventoryManagementApp = () => {
                       setCurrentItem(item);
                       setOpenEditDialog(true);
                     }}
-                    className="text-blue-500 hover:text-blue-700 transition-transform transform hover:scale-110"
+                    className=" transition-transform transform hover:scale-150"
                   >
                     ✏️
                   </button>
                   <button
                     onClick={() => handleDeleteItem(item.id)}
-                    className="text-red-500 hover:text-red-700 transition-transform transform hover:scale-110"
+                    className="transition-transform transform hover:scale-140"
                   >
                     🗑️
                   </button>
