@@ -91,13 +91,7 @@ const InventoryManagementApp = () => {
   };
 
 
-  // const filteredInventory = useMemo(
-  //   () =>
-  //     sortedInventory.filter(
-  //       (item) => categoryFilter === "All" || item.category === categoryFilter
-  //     ),
-  //   [sortedInventory, categoryFilter]
-  // );
+  
 
   const filteredInventory = useMemo(
     () =>
