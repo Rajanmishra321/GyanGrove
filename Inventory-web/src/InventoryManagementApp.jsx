@@ -89,7 +89,7 @@ const InventoryManagementApp = () => {
   return (
     <div className=" w-screen h-screen  bg-gradient-to-r from-purple-100 to-orange-100">
       <div className="container mx-auto p-6">
-      <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 animate-gradient-x mb-8 text-center tracking-widest">
+      <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 animate-gradient-x mb-8 text-center tracking-widest animate-bounce">
         Inventory Management
       </h1>
 
@@ -116,9 +116,9 @@ const InventoryManagementApp = () => {
       </div>
 
       <div className="overflow-x-auto rounded-lg shadow-xl border border-gray-300">
-        <table className="w-full border-collapse  bg-gray-100 text-sm text-gray-800">
+        <table className="w-full border-collapse transition delay-150 duration-300 ease-in-out hover:-translate-y-1  bg-gray-100 text-sm text-gray-800">
           <thead>
-            <tr className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white">
+            <tr className="bg-gradient-to-r  from-purple-500 via-pink-500 to-orange-500 text-white">
               {["Name", "Category", "Quantity", "Price"].map((key) => (
                 <th
                   key={key}
