@@ -139,7 +139,7 @@ const InventoryManagementApp = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto rounded-lg shadow-xl border border-gray-300">
+        <div className="rounded-lg shadow-xl border border-gray-300">
           <table className="w-full border-collapse  bg-gray-100 text-sm text-gray-800">
             <thead>
               <tr className="bg-gradient-to-r  from-purple-500 via-pink-500 to-orange-500 text-white">
@@ -169,7 +169,7 @@ const InventoryManagementApp = () => {
                   <td className="p-4">{item.category}</td>
                   <td
                     className={`p-4 ${
-                      parseInt(item.quantity.match(/\d+/)[0]) < 10
+                      item.quantity && parseInt(String(item.quantity), 10) < 10
                         ? "text-red-600 font-bold"
                         : ""
                     }`}
